@@ -171,7 +171,7 @@ fn test_solidbits(hog: &mut [u64], errors: &mut HashMap<usize, u32>) -> Result<(
     let mut error_count = 0;
     let mut data: u64;
     for i in 0..64 {
-        print!("\n\t{} of 64... ", i);
+        print!("\n\t{} of 64... ", i+1);
         data = if i % 2 == 0 {
             0xffffffffffffffff
         } else {
@@ -201,7 +201,7 @@ fn test_checkboard(hog: &mut [u64], errors: &mut HashMap<usize, u32>) -> Result<
     let mut error_count = 0;
     let mut data: u64;
     for i in 0..64 {
-        print!("\n\t{} of 64... ", i);
+        print!("\n\t{} of 64... ", i+1);
         data = if i % 2 == 0 {
             0x5555555555555555
         } else {
@@ -227,7 +227,7 @@ fn test_checkboard(hog: &mut [u64], errors: &mut HashMap<usize, u32>) -> Result<
 }
 
 fn main() {
-    let allocation_amount: i64 = 4096;
+    let allocation_amount: i64 = 256;
 
     let amount_as_u8: usize = (allocation_amount * 1024 * 1024).try_into().unwrap();
 

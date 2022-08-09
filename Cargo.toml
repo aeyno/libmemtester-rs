@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 libc = "0.2.127"
 winapi = { version = "0.3.9", features=["memoryapi", "winbase", "processthreadsapi"]}
+rand = "0.8.5"
