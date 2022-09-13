@@ -1,6 +1,6 @@
 [package]
 name = "libmemtester"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Tom Gouville <tom.gouville@protonmail.com>"]
 description = "A Rust library for testing memory errors"
 license = "GPL-3.0"
