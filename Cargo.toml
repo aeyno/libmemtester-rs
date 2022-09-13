@@ -1,0 +1,20 @@
+[package]
+name = "libmemtester"
+version = "1.0.0"
+authors = ["Tom Gouville <tom.gouville@protonmail.com>"]
+license = "GPLv3"
+edition = "2021"
+publish = true
+
+[lib]
+name = "libmemtester"
+path = "src/lib.rs"
+
+
+[dependencies]
+libc = "0.2.127"
+rand = "0.8.5"
+nix = "0.24.2"
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3.9", features=["memoryapi", "winbase", "processthreadsapi"]}
