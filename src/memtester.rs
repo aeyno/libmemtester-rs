@@ -337,7 +337,7 @@ pub struct MemoryTests {
 
 impl MemoryTests {
     /// Create a new `MemoryTests` object.
-    /// 
+    ///
     /// # Arguments
     /// - `allocation_amount`: the size, in bytes, of the memory region to allocate, should be a multiple of 16
     /// - `info_prints`: activate debug prints
