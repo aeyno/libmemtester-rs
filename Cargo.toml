@@ -2,6 +2,7 @@
 name = "libmemtester"
 version = "1.0.0"
 authors = ["Tom Gouville <tom.gouville@protonmail.com>"]
+description = "A Rust library for testing memory errors"
 license = "GPLv3"
 edition = "2021"
 publish = true
