@@ -298,6 +298,7 @@ pub struct MemoryTestIterator<'a> {
 impl Iterator for MemoryTestIterator<'_> {
     type Item = (String, usize);
 
+    /// Run the next test and returns its name and result.
     fn next(&mut self) -> Option<Self::Item> {
         if self.idx >= TESTS.len() {
             return None;
@@ -322,16 +323,30 @@ impl MemoryTestIterator<'_> {
     }
 }
 
+/// An object to run memory tests on a memory region.
+/// The memory region is allocated as a vector of `u64` and is protected from swapping via a syscall
+/// (`mlock` on Linux and `VirtualLock` on Windows).
 pub struct MemoryTests {
+    /// Activate debug prints
     info_prints: bool,
+    /// The allocated chunk of memory
     hog: Vec<u64>,
+    /// The errors found while testing
     errors: HashMap<usize, u32>,
 }
 
 impl MemoryTests {
+    /// Create a new `MemoryTests` object.
+    /// 
+    /// # Arguments
+    /// - `allocation_amount`: the size, in bytes, of the memory region to allocate, should be a multiple of 16
+    /// - `info_prints`: activate debug prints
     pub fn new(allocation_amount: usize, print_information: bool) -> Result<MemoryTests, String> {
         if !Uid::effective().is_root() {
             return Err("You must be root to run this test.".into());
+        }
+        if allocation_amount % 16 != 0 {
+            return Err("Allocation amount must be a multiple of 16.".into());
         }
         let amount_as_u8: usize = allocation_amount;
 
@@ -355,6 +370,7 @@ impl MemoryTests {
         })
     }
 
+    /// Returns an iterator of tests
     pub fn get_iterator(&mut self) -> MemoryTestIterator {
         MemoryTestIterator {
             info_prints: self.info_prints,
@@ -364,8 +380,23 @@ impl MemoryTests {
         }
     }
 
+    /// Returns the errors found while testing
     pub fn get_errors(&self) -> &HashMap<usize, u32> {
         &self.errors
+    }
+
+    /// Returns the number of errors found while testing
+    pub fn get_error_count(&self) -> u32 {
+        let mut total = 0;
+        for (_, count) in self.errors.iter() {
+            total += *count;
+        }
+        total
+    }
+
+    /// Returns the allocated memory size in bytes
+    pub fn get_allocated_size(&self) -> usize {
+        self.hog.len() * 8
     }
 }
 
@@ -374,7 +405,7 @@ impl Drop for MemoryTests {
         if self.info_prints {
             println!("Unlocking memory...");
         }
-        unlock_mem(self.hog.as_ptr() as *mut c_void, self.hog.len() * 8);
+        unlock_mem(self.hog.as_ptr() as *mut c_void, self.get_allocated_size());
         if self.info_prints {
             println!("Memory unlocked.");
         }
