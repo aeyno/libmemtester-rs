@@ -8,13 +8,18 @@ The goal of this crate is to provide a cross-platform memory tester (it has been
 
 It works by allocating a large chunk of memory and then writing a pattern to it. It then reads the memory and checks that the pattern is correct. It does this for a number of different patterns. If the memory is faulty, it will detect it and return a hashmap of the faulty addresses and the number of times they were faulty.
 
+To prevent the operating system from swapping out the memory and moving pages, this crate locks the memory (using `mlock` syscall on Linux and `VirtualLock` on Windows).
+In order to do this, the crate needs to be run as root.
+
 ## ⌨ Usage
 
 ```rust
-use libmemtester::MemTester;
+use libmemtester::MemoryTests;
 
 fn main() {
+    // The size to allocate in bytes (must be divisible by 16)
     let size_to_allocate = 1024 * 1024 * 1024; // 1GB
+
     let debug_prints = false; // If you want the debug prints
 
     // Create a new MemTester instance
@@ -40,6 +45,8 @@ fn main() {
     println!("Errors: {:#?}", errors);
 }
 ```
+
+You can see an example of this crate being used in [memtester-rs](https://github.com/aeyno/memtester-rs).
 
 ## 📃 License
 
