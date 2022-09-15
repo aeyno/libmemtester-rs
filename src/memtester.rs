@@ -348,17 +348,16 @@ impl MemoryTests {
         if allocation_amount % 16 != 0 {
             return Err("Allocation amount must be a multiple of 16.".into());
         }
-        let amount_as_u8: usize = allocation_amount;
 
         // Since we are using 64 bit values, we need to divide the amount by 8
-        let hog_length = amount_as_u8 / 8;
+        let hog_length = allocation_amount / 8;
         let hog = vec![0u64; hog_length];
 
         let ptr = hog.as_ptr() as *mut c_void;
         if print_information {
             println!("Locking memory...");
         }
-        lock_mem(ptr, amount_as_u8);
+        lock_mem(ptr, allocation_amount);
         if print_information {
             println!("Memory locked.");
         }
