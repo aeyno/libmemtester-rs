@@ -284,11 +284,7 @@ fn test_walkbits1(
     let mut error_count = 0;
     let mut data: u64;
     for i in 0..128 {
-        data = if i < 64  {
-            1 << i
-        } else {
-            1 << 128 - i - 1
-        };
+        data = if i < 64 { 1 << i } else { 1 << 128 - i - 1 };
         if debug_prints {
             println!("\tWalking 1: {:#066b}", data);
         }
@@ -316,7 +312,7 @@ fn test_walkbits0(
     let mut data: u64;
     let max_u64 = u64::MAX;
     for i in 0..128 {
-        data = if i < 64  {
+        data = if i < 64 {
             max_u64 - (1 << i)
         } else {
             max_u64 - (1 << 128 - i - 1)
@@ -350,7 +346,7 @@ const TESTS: [(&str, TestFunction); 12] = [
     ("Solid Bits", test_solidbits),
     ("Checkboard", test_checkboard),
     ("Walkbits1", test_walkbits1),
-    ("Walkbits0", test_walkbits0)
+    ("Walkbits0", test_walkbits0),
 ];
 
 pub struct MemoryTestIterator<'a> {
