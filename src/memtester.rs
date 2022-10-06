@@ -275,7 +275,70 @@ fn test_checkboard(
     }
 }
 
-const TESTS: [(&str, TestFunction); 10] = [
+fn test_walkbits1(
+    hog: &mut [u64],
+    errors: &mut HashMap<usize, u32>,
+    debug_prints: bool,
+) -> Result<(), usize> {
+    let half = hog.len() / 2;
+    let mut error_count = 0;
+    let mut data: u64;
+    for i in 0..128 {
+        data = if i < 64  {
+            1 << i
+        } else {
+            1 << 128 - i - 1
+        };
+        if debug_prints {
+            println!("\tWalking 1: {:#066b}", data);
+        }
+        for j in 0..half {
+            hog[j] = data;
+            hog[half + j] = data;
+        }
+        if let Err(count) = compare_halfs(hog, errors, debug_prints) {
+            error_count += count;
+        }
+    }
+    match error_count {
+        0 => Ok(()),
+        _ => Err(error_count),
+    }
+}
+
+fn test_walkbits0(
+    hog: &mut [u64],
+    errors: &mut HashMap<usize, u32>,
+    debug_prints: bool,
+) -> Result<(), usize> {
+    let half = hog.len() / 2;
+    let mut error_count = 0;
+    let mut data: u64;
+    let max_u64 = u64::MAX;
+    for i in 0..128 {
+        data = if i < 64  {
+            max_u64 - (1 << i)
+        } else {
+            max_u64 - (1 << 128 - i - 1)
+        };
+        if debug_prints {
+            println!("\tWalking 0: {:#066b}", data);
+        }
+        for j in 0..half {
+            hog[j] = data;
+            hog[half + j] = data;
+        }
+        if let Err(count) = compare_halfs(hog, errors, debug_prints) {
+            error_count += count;
+        }
+    }
+    match error_count {
+        0 => Ok(()),
+        _ => Err(error_count),
+    }
+}
+
+const TESTS: [(&str, TestFunction); 12] = [
     ("Random Data", test_rand_data),
     ("XOR", test_xor),
     ("ADD", test_add),
@@ -286,6 +349,8 @@ const TESTS: [(&str, TestFunction); 10] = [
     ("AND", test_and),
     ("Solid Bits", test_solidbits),
     ("Checkboard", test_checkboard),
+    ("Walkbits1", test_walkbits1),
+    ("Walkbits0", test_walkbits0)
 ];
 
 pub struct MemoryTestIterator<'a> {
@@ -396,6 +461,15 @@ impl MemoryTests {
     /// Returns the allocated memory size in bytes
     pub fn get_allocated_size(&self) -> usize {
         self.hog.len() * 8
+    }
+
+    /// Returns the name of the tests
+    pub fn get_test_list(&self) -> Vec<String> {
+        let mut tests = Vec::new();
+        for test in TESTS {
+            tests.push(String::from(test.0));
+        }
+        tests
     }
 }
 
