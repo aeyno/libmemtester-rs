@@ -284,7 +284,7 @@ fn test_walkbits1(
     let mut error_count = 0;
     let mut data: u64;
     for i in 0..128 {
-        data = if i < 64 { 1 << i } else { 1 << 128 - i - 1 };
+        data = if i < 64 { 1 << i } else { 1 << (128 - i - 1) };
         if debug_prints {
             println!("\tWalking 1: {:#066b}", data);
         }
@@ -315,7 +315,7 @@ fn test_walkbits0(
         data = if i < 64 {
             max_u64 - (1 << i)
         } else {
-            max_u64 - (1 << 128 - i - 1)
+            max_u64 - (1 << (128 - i - 1))
         };
         if debug_prints {
             println!("\tWalking 0: {:#066b}", data);
