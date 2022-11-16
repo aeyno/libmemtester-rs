@@ -1,5 +1,5 @@
-use core::ffi::c_void;
 #[cfg(target_os = "linux")]
+use core::ffi::c_void;
 use libc::{mlock, munlock};
 use nix::unistd::Uid;
 use std::collections::HashMap;
