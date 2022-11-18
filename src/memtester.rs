@@ -1,10 +1,10 @@
-use std::collections::HashMap;
 #[cfg(target_os = "linux")]
 use core::ffi::c_void;
 #[cfg(target_os = "linux")]
 use libc::{mlock, munlock};
 #[cfg(target_os = "linux")]
 use nix::unistd::Uid;
+use std::collections::HashMap;
 #[cfg(windows)]
 use winapi::{
     ctypes::c_void,
