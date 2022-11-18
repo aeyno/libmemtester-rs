@@ -13,8 +13,10 @@ path = "src/lib.rs"
 
 
 [dependencies]
-libc = "0.2.127"
 rand = "0.8.5"
+
+[target.'cfg(any(target_os = "linux"))'.dependencies]
+libc = "0.2.127"
 nix = "0.24.2"
 
 [target.'cfg(windows)'.dependencies]

@@ -1,9 +1,10 @@
+use std::collections::HashMap;
 #[cfg(target_os = "linux")]
 use core::ffi::c_void;
 #[cfg(target_os = "linux")]
 use libc::{mlock, munlock};
+#[cfg(target_os = "linux")]
 use nix::unistd::Uid;
-use std::collections::HashMap;
 #[cfg(windows)]
 use winapi::{
     ctypes::c_void,
@@ -404,6 +405,7 @@ impl MemoryTests {
     /// - `allocation_amount`: the size, in bytes, of the memory region to allocate, should be a multiple of 16
     /// - `info_prints`: activate debug prints
     pub fn new(allocation_amount: usize, print_information: bool) -> Result<MemoryTests, String> {
+        #[cfg(target_os = "linux")]
         if !Uid::effective().is_root() {
             return Err("You must be root to run this test.".into());
         }
