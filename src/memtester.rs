@@ -17,7 +17,7 @@ fn lock_mem(pointer: *mut c_void, size: usize) {
     #[cfg(windows)]
     {
         // Locking memory using VirtualLock
-        let ptr = hog.as_ptr() as *mut c_void;
+        let ptr = pointer as *mut c_void;
         unsafe {
             SetProcessWorkingSetSize(GetCurrentProcess(), size + 400 * 1024, size + 800 * 1024);
         };
