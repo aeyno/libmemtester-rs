@@ -10,9 +10,15 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
+  checks:
+    name: Check on ${{ matrix.oses.os }}
+    runs-on: ${{ matrix.oses.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        oses:
+          - { os: 'ubuntu-latest',  target: 'x86_64-unknown-linux-gnu', cross: false }
+          - { os: 'windows-latest', target: 'x86_64-pc-windows-msvc',   cross: false }
 
     steps:
     - uses: actions/checkout@v3
@@ -28,4 +34,3 @@ jobs:
       run: | 
         rustup component add clippy
         cargo clippy --all --all-targets --all-features -- -D warnings
-

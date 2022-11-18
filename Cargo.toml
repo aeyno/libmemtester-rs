@@ -1,6 +1,6 @@
 [package]
 name = "libmemtester"
-version = "1.2.0"
+version = "1.2.1"
 authors = ["Tom Gouville <tom.gouville@protonmail.com>"]
 description = "A Rust library for testing memory for faults"
 license = "GPL-3.0"
@@ -13,8 +13,10 @@ path = "src/lib.rs"
 
 
 [dependencies]
-libc = "0.2.127"
 rand = "0.8.5"
+
+[target.'cfg(any(target_os = "linux"))'.dependencies]
+libc = "0.2.127"
 nix = "0.24.2"
 
 [target.'cfg(windows)'.dependencies]

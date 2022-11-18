@@ -1,6 +1,8 @@
+#[cfg(target_os = "linux")]
 use core::ffi::c_void;
 #[cfg(target_os = "linux")]
 use libc::{mlock, munlock};
+#[cfg(target_os = "linux")]
 use nix::unistd::Uid;
 use std::collections::HashMap;
 #[cfg(windows)]
@@ -16,7 +18,7 @@ fn lock_mem(pointer: *mut c_void, size: usize) {
     #[cfg(windows)]
     {
         // Locking memory using VirtualLock
-        let ptr = hog.as_ptr() as *mut c_void;
+        let ptr = pointer as *mut c_void;
         unsafe {
             SetProcessWorkingSetSize(GetCurrentProcess(), size + 400 * 1024, size + 800 * 1024);
         };
@@ -403,6 +405,7 @@ impl MemoryTests {
     /// - `allocation_amount`: the size, in bytes, of the memory region to allocate, should be a multiple of 16
     /// - `info_prints`: activate debug prints
     pub fn new(allocation_amount: usize, print_information: bool) -> Result<MemoryTests, String> {
+        #[cfg(target_os = "linux")]
         if !Uid::effective().is_root() {
             return Err("You must be root to run this test.".into());
         }
