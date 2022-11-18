@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        triple:
+        oses:
           - { os: 'ubuntu-latest',  target: 'x86_64-unknown-linux-gnu', cross: false }
           - { os: 'windows-latest', target: 'x86_64-pc-windows-msvc',   cross: false }
 
